@@ -1,3 +1,8 @@
+import json
+import os
+
+DATA_FILE = "transactions.json"
+
 transactions = []  # each item: {"type": "expense"|"income", "amount": float, "category": str}
 
 
@@ -25,10 +30,17 @@ def get_amount():
 def add_expense():
     print("\n--- Add Expense ---")
     amount = get_amount()
-    category = input("Category (e.g. food, transport): ").strip() or "uncategorized"
-    transactions.append({"type": "expense", "amount": amount, "category": category})
-    print(f"Saved: -{amount:.2f} [{category}]")
+    category = input("Category: ").strip()
 
+    transactions.append({
+        "type": "expense",
+        "amount": amount,
+        "category": category
+    })
+
+    save_transactions()
+
+    print("Expense saved.")
 
 def add_income():
     print("\n--- Add Income ---")
@@ -51,6 +63,7 @@ def view_summary():
 
 
 def main():
+    load_transactions()
     while True:
         show_menu()
         choice = input("Choose an option: ").strip()
@@ -66,6 +79,17 @@ def main():
             break
         else:
             print("Invalid choice. Try again.")
+
+def load_transactions():
+    global transactions
+
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r") as f:
+            transactions = json.load(f)
+
+def save_transactions():
+    with open(DATA_FILE, "w") as f:
+        json.dump(transactions, f)
 
 
 if __name__ == "__main__":

@@ -51,15 +51,30 @@ def add_income():
 
 
 def view_summary():
-    total_expenses = sum(t["amount"] for t in transactions if t["type"] == "expense")
-    total_income = sum(t["amount"] for t in transactions if t["type"] == "income")
+    total_expenses = 0
+    total_income = 0
+    category_totals = {}
+
+    for t in transactions:
+        if t["type"] == "expense":
+            total_expenses += t["amount"]
+
+            category = t["category"]
+            category_totals[category] = category_totals.get(category, 0) + t["amount"]
+
+        if t["type"] == "income":
+            total_income += t["amount"]
+
     balance = total_income - total_expenses
 
     print("\n--- Summary ---")
-    print(f"Transactions: {len(transactions)}")
-    print(f"Total income:  +{total_income:.2f}")
-    print(f"Total expenses: -{total_expenses:.2f}")
-    print(f"Balance:       {balance:.2f}")
+    print(f"Total income: {total_income}")
+    print(f"Total expenses: {total_expenses}")
+    print(f"Balance: {balance}")
+
+    print("\nExpenses by category:")
+    for category, amount in category_totals.items():
+        print(f"{category}: {amount}")
 
 
 def main():

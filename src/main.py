@@ -11,7 +11,8 @@ def show_menu():
     print("1) Add expense")
     print("2) Add income")
     print("3) View summary")
-    print("4) Exit")
+    print("4) List transactions")
+    print("5) Exit")
 
 
 def get_amount():
@@ -105,6 +106,42 @@ def load_transactions():
 def save_transactions():
     with open(DATA_FILE, "w") as f:
         json.dump(transactions, f)
+
+
+def list_transactions():
+    print("\n--- All Transactions ---")
+
+    if not transactions:
+        print("No transactions found.")
+        return
+
+    for index, transaction in enumerate(transactions, start=1):
+        print(
+            f"{index}. {transaction['type'].upper()} | "
+            f"Amount: {transaction['amount']} | "
+            f"Category: {transaction['category']}"
+        )
+
+def main():
+    load_transactions()
+
+    while True:
+        show_menu()
+        choice = input("Choose an option: ").strip()
+
+        if choice == "1":
+            add_expense()
+        elif choice == "2":
+            add_income()
+        elif choice == "3":
+            view_summary()
+        elif choice == "4":
+            list_transactions()
+        elif choice == "5":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice. Try again.")
 
 
 if __name__ == "__main__":
